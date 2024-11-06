@@ -1,13 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
-using System.IO;
 using System.Reflection;
-using System.Security.Cryptography;
-using System.Text;
 
 public class HelloWorld
 {
-    public enum Propiedades
+    public enum Socket
     {
         [Description("Puerto 89-80, validar")]
         Puerto_8980 = 89 - 80,
@@ -33,119 +30,61 @@ public class HelloWorld
         Puerto_8990 = 89 - 90,
     }
 
-    private static readonly byte[] Key = Encoding.UTF8.GetBytes("0123456789abcdef"); // 16 bytes for AES-128
-    private static readonly byte[] IV = Encoding.UTF8.GetBytes("abcdef9876543210");  // 16 bytes IV
-
     public static void Main(string[] args)
     {
-        foreach (Propiedades value in Enum.GetValues(typeof(Propiedades)))
+        foreach (Socket value in Enum.GetValues(typeof(Socket)))
         {
-            MemberInfo[] memberInfo = typeof(Propiedades).GetMember(value.ToString());
+            MemberInfo[] memberInfo = typeof(Socket).GetMember(value.ToString());
             DescriptionAttribute descriptionAttribute = memberInfo[0].GetCustomAttribute<DescriptionAttribute>();
             string description = descriptionAttribute != null ? descriptionAttribute.Description : "No description";
 
             Console.WriteLine($"{value}: {description}");
             HandlePortConfiguration(value);
         }
-
-        string originalText = "Texto a encriptar";
-        string encryptedText = Encrypt(originalText);
-        Console.WriteLine($"Texto encriptado: {encryptedText}");
-        Console.ReadLine();
-        string decryptedText = Decrypt(encryptedText);
-        Console.WriteLine($"Texto desencriptado: {decryptedText}");
-        Console.ReadLine();
     }
 
-    private static void HandlePortConfiguration(Propiedades port)
+    private static void HandlePortConfiguration(Socket port)
     {
-        switch (port)
+       
+        switch ((Socket)port)
         {
-            case Propiedades.Puerto_8980:
+            case Socket.Puerto_8980:
                 Console.WriteLine("Configure puerto 8980");
                 break;
-            case Propiedades.Puerto_8981:
+            case Socket.Puerto_8981:
                 Console.WriteLine("Configure puerto 8981");
                 break;
-            case Propiedades.Puerto_8982:
+            case Socket.Puerto_8982:
                 Console.WriteLine("Configure puerto 8982");
                 break;
-            case Propiedades.Puerto_8983:
+            case Socket.Puerto_8983:
                 Console.WriteLine("Configure puerto 8983");
                 break;
-            case Propiedades.Puerto_8984:
+            case Socket.Puerto_8984:
                 Console.WriteLine("Configure puerto 8984");
                 break;
-            case Propiedades.Puerto_8985:
+            case Socket.Puerto_8985:
                 Console.WriteLine("Configure puerto 8985");
                 break;
-            case Propiedades.Puerto_8986:
+            case Socket.Puerto_8986:
                 Console.WriteLine("Configure puerto 8986");
                 break;
-            case Propiedades.Puerto_8987:
+            case Socket.Puerto_8987:
                 Console.WriteLine("Configure puerto 8987");
                 break;
-            case Propiedades.Puerto_8988:
+            case Socket.Puerto_8988:
                 Console.WriteLine("Configure puerto 8988");
                 break;
-            case Propiedades.Puerto_8989:
+            case Socket.Puerto_8989:
                 Console.WriteLine("Configure puerto 8989");
                 break;
-            case Propiedades.Puerto_8990:
+            case Socket.Puerto_8990:
                 Console.WriteLine("Configure puerto 8990");
                 break;
             default:
                 Console.WriteLine("Unknown puerto");
                 break;
         }
-        
-    }
-
-    private static string Encrypt(string plainText)
-    {
-        using (Aes aes = Aes.Create())
-        {
-            aes.Key = Key;
-            aes.IV = IV;
-
-            using (var encryptor = aes.CreateEncryptor(aes.Key, aes.IV))
-            {
-                using (var ms = new MemoryStream())
-                {
-                    using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
-                    {
-                        using (var sw = new StreamWriter(cs))
-                        {
-                            sw.Write(plainText);
-                        }
-                        return Convert.ToBase64String(ms.ToArray());
-                    }
-                }
-            }
-        }
-    }
-
-    private static string Decrypt(string encryptedText)
-    {
-        using (Aes aes = Aes.Create())
-        {
-            aes.Key = Key;
-            aes.IV = IV;
-
-            using (var decryptor = aes.CreateDecryptor(aes.Key, aes.IV))
-            {
-                using (var ms = new MemoryStream(Convert.FromBase64String(encryptedText)))
-                {
-                    using (var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
-                    {
-                        using (var sr = new StreamReader(cs))
-                        {
-                            return sr.ReadToEnd();
-                        }
-                    }
-                }
-            }
-        }
-
+        Console.ReadLine();
     }
 }
